@@ -6,10 +6,9 @@ from models.model import Weather
 
 
 def get_weather(city_name: str, lang: str = 'ru') -> dict[str, str]:
-    api_key = "5617a2122cca993a3ddcbe401adb149d"
+    api_key = "lol"
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?&units=metric&q={city_name}&appid={api_key}&lang={lang}"#lat={lat}&lon={lon}&appid={api_key}"
-    # url = f"http://api.openweathermap.org/geo/1.0/direct?q={city_name}&appid={api_key}"
+    url = f"https://api.openweathermap.org/data/2.5/weather?&units=metric&q={city_name}&appid={api_key}&lang={lang}"
     
     return requests.get(url).json()
 
