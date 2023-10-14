@@ -1,9 +1,10 @@
 import json
 
 import requests
+# import typeshed
 
+from config import load
 from models.model import Weather
-from config import OWP_API_KEY, OWP_URL
 
 
 class OpenWeatherClient:
@@ -16,18 +17,26 @@ class OpenWeatherClient:
         if self.url is None or self.api_key is None:
             return None
 
-        self.url = self.url + \
-            f"/weather?&units=metric&q={city_name}&appid={self.api_key}&lang={lang}"
+        # self.url = self.url + \
+        #     f"/weather?&units=metric&q={city_name}&appid={self.api_key}&lang={lang}"
+        payload = {
+            'q': city_name,
+            'appid': self.api_key,
+            'units': 'metric',
+            'lang': lang
+        }
+        print(self.url)
 
         try:
-            weather = requests.get(self.url).json()
+            weather = requests.get(self.url, params=payload).json()
             return weather
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             print(e)
             return None
 
 
 if __name__ == '__main__':
-    owc = OpenWeatherClient(OWP_URL, OWP_API_KEY)
+    config = load()
+    owc = OpenWeatherClient(config.openweather_url, config.openweather_api_key)
     weather = owc.get_weather(city_name='Moscow')
     print(weather)
