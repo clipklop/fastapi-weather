@@ -1,18 +1,16 @@
-import json
-from datetime import datetime   
+from datetime import datetime
 
 import requests
 
-from config import load
-from models.model import Weather
+from app.parser.models.model import Weather
 
 
 class OpenWeatherClient:
-    def __init__(self, url: str, api_key: str) -> None:
+    def __init__(self, url: str | None, api_key: str | None) -> None:
         self.url = url
         self.api_key = api_key
 
-    def get_weather(self, city_name: str, lang: str = 'ru') -> dict[str, str]:
+    def get_weather(self, city_name: str, lang: str = 'ru') -> dict[str, str] | None:
 
         if self.url is None or self.api_key is None:
             return None
@@ -32,7 +30,12 @@ class OpenWeatherClient:
             return None
 
 
-def weather_to_model(weather_dict: dict[str, str]) -> Weather:
+def weather_to_model(weather_dict: dict[str, str] | None) -> Weather | None:
+    # Наверное не самое красивое решение, но мне показалось, что все эти поля будет
+    # полезно тянуть и сохранять в датакласс для последующего анализа
+    if not weather_dict:
+        return None
+
     return Weather(
         city_name=weather_dict.get('name'),
         country=weather_dict.get('sys').get('country'),
@@ -53,13 +56,13 @@ def weather_to_model(weather_dict: dict[str, str]) -> Weather:
         grnd_level=weather_dict.get('main').get('grnd_level'),
         visibility=weather_dict.get('visibility'),
         checked_at=datetime.fromtimestamp(weather_dict.get('dt')),
+        wind={
+            'speed': weather_dict.get('wind').get('speed'),
+            'deg': weather_dict.get('wind').get('deg'),
+            'gust': weather_dict.get('wind').get('gust')
+        },
+        clouds={
+            "all": weather_dict.get('clouds').get('all')
+        },
+        rain=weather_dict.get('rain') if weather_dict.get('rain') else None
     )
-
-
-if __name__ == '__main__':
-    config = load()
-    owc = OpenWeatherClient(config.openweather_url, config.openweather_api_key)
-    weather = owc.get_weather(city_name='Moscow')
-    print(weather)
-    w = weather_to_model(weather)
-    print(w)
