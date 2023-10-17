@@ -14,4 +14,4 @@
 ### Run
 - Пропишите ваш токен от API Openweathermap через `.env` файл в в переменную окруженния - `OWP_API_KEY`
 
-        python -m api
+        uvicorn app.main:app
