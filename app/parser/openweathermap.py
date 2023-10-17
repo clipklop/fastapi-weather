@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import requests
+import httpx
 
 from app.parser.models.model import Weather
 
@@ -10,7 +10,7 @@ class OpenWeatherClient:
         self.url = url
         self.api_key = api_key
 
-    def get_weather(self, city_name: str, lang: str = 'ru') -> dict[str, str] | None:
+    async def get_weather(self, city_name: str, lang: str = 'ru') -> dict[str, str] | None:
 
         if self.url is None or self.api_key is None:
             return None
@@ -23,9 +23,10 @@ class OpenWeatherClient:
         }
 
         try:
-            weather = requests.get(self.url, params=payload).json()
-            return weather
-        except requests.exceptions.RequestException as e:
+            async with httpx.AsyncClient() as client:
+                weather = await client.get(self.url, params=payload)
+                return weather.json()
+        except httpx._exceptions.ConnectTimeout as e:
             print(e)
             return None
 
