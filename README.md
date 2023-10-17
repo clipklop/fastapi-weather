@@ -12,6 +12,6 @@
     poetry install
 
 ### Run
-- Пропишите ваш токен от API Openweathermap через `.env` файл в в переменную окруженния - `OWP_API_KEY`
+- Пропишите URL API Openweathermap и токен к нему в файл .env (.env.template), переменные OWP_URL и OWP_API_KEY
 
         uvicorn app.main:app
