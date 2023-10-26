@@ -11,7 +11,6 @@ COPY ./pyproject.toml ./poetry.lock* /tmp/
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 
-
 FROM python:${PYTHON_VERSION} as base
 
 
