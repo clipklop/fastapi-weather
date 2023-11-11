@@ -18,10 +18,10 @@
 
 ### OR USING DOCKER
 
-Install:
+### Install:
     docker build -t openweather-api .
     docker compose up --build
 
-Usage:
+### Usage:
 
     http://0.0.0.0:8000/docs
