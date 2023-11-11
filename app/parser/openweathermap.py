@@ -6,11 +6,11 @@ from app.parser.models.model import Weather
 
 
 class OpenWeatherClient:
-    def __init__(self, url: str | None, api_key: str | None) -> None:
+    def __init__(self, url: str, api_key: str) -> None:
         self.url = url
         self.api_key = api_key
 
-    async def get_weather(self, city_name: str, lang: str = 'ru') -> dict[str, str] | None:
+    async def get_weather(self, city_name: str, lang: str = 'ru') -> Weather:
 
         if self.url is None or self.api_key is None:
             return None
@@ -26,9 +26,10 @@ class OpenWeatherClient:
             async with httpx.AsyncClient() as client:
                 weather = await client.get(self.url, params=payload)
                 return weather.json()
-        except httpx._exceptions.ConnectTimeout as e:
-            print(e)
-            return None
+        # except httpx._exceptions.ConnectTimeout as e:
+            # raise HttpException(status_code=500, detail='can not receive data from owm')
+        except httpx.HTTPError as exc:
+            raise f"HTTP Exception for {exc.request.url} - {exc}"
 
 
 def weather_to_model(weather_dict: dict[str, str] | None) -> Weather | None:
