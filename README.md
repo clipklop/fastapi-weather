@@ -15,3 +15,13 @@
 - Пропишите URL API Openweathermap и токен к нему в файл .env (.env.template), переменные OWP_URL и OWP_API_KEY
 
         uvicorn app.main:app
+
+### OR USING DOCKER
+
+Install:
+
+    docker compose up --build
+
+Usage:
+
+    http://0.0.0.0:8000/
